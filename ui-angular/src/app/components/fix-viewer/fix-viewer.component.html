@@ -1,0 +1,119 @@
+<div class="fix-container container">
+  <div class="page-header">
+    <h1>Code Fix</h1>
+    <p class="subtitle">Automated fix for transaction {{ transactionId }}</p>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loading && solution" class="fade-in">
+    <!-- Fix Info -->
+    <div class="card">
+      <div class="card-header">Fix Details</div>
+      <div class="fix-info">
+        <div class="fix-header">
+          <span class="badge badge-success">{{ solution.solutionType }}</span>
+          <span class="confidence">Confidence: {{ solution.confidence || 'HIGH' }}</span>
+        </div>
+        
+        <div class="fix-description">
+          <h3>{{ solution.fix.explanation }}</h3>
+          <p class="file-path">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
+            </svg>
+            {{ solution.fix.file }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Code Comparison -->
+    <div class="card">
+      <div class="card-header">Code Changes</div>
+      <div class="code-comparison">
+        <div class="code-column">
+          <div class="code-column-header remove-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="5" y1="12" x2="19" y2="12" stroke-width="2"/>
+            </svg>
+            Original Code
+          </div>
+          <div class="code-block code-diff-remove">
+            <pre>{{ solution.fix.originalCode }}</pre>
+          </div>
+        </div>
+
+        <div class="code-arrow">
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <line x1="5" y1="12" x2="19" y2="12" stroke-width="2"/>
+            <polyline points="12 5 19 12 12 19" stroke-width="2"/>
+          </svg>
+        </div>
+
+        <div class="code-column">
+          <div class="code-column-header add-header">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <line x1="12" y1="5" x2="12" y2="19" stroke-width="2"/>
+              <line x1="5" y1="12" x2="19" y2="12" stroke-width="2"/>
+            </svg>
+            Fixed Code
+          </div>
+          <div class="code-block code-diff-add">
+            <pre>{{ solution.fix.fixedCode }}</pre>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card" *ngIf="!prCreated">
+      <div class="actions">
+        <button class="btn btn-success" (click)="createPR()" [disabled]="creatingPR">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M16 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2V8l-5-5z" stroke-width="2"/>
+            <polyline points="9 12 11 14 15 10" stroke-width="2"/>
+          </svg>
+          <span *ngIf="!creatingPR">Create Pull Request</span>
+          <span *ngIf="creatingPR">Creating PR...</span>
+        </button>
+        <button class="btn btn-secondary" [routerLink]="['/diagnostic', transactionId]">
+          Back to Diagnostic
+        </button>
+      </div>
+    </div>
+
+    <!-- PR Success -->
+    <div class="card success-card" *ngIf="prCreated">
+      <div class="success-header">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" class="success-icon">
+          <circle cx="12" cy="12" r="10" stroke-width="2"/>
+          <polyline points="9 12 11 14 15 10" stroke-width="2"/>
+        </svg>
+        <h2>Pull Request Created Successfully!</h2>
+      </div>
+      
+      <div class="pr-details">
+        <div class="pr-info-row">
+          <span class="pr-label">PR Number:</span>
+          <span class="pr-value">#{{ prCreated.prNumber }}</span>
+        </div>
+        <div class="pr-info-row">
+          <span class="pr-label">Branch:</span>
+          <span class="pr-value">{{ prCreated.branch }}</span>
+        </div>
+        <div class="pr-info-row">
+          <span class="pr-label">URL:</span>
+          <a [href]="prCreated.prUrl" target="_blank" class="pr-link">{{ prCreated.prUrl }}</a>
+        </div>
+      </div>
+      
+      <div class="success-actions">
+        <a [href]="prCreated.prUrl" target="_blank" class="btn btn-primary">View PR on GitHub</a>
+        <button class="btn btn-secondary" (click)="viewPRs()">View All PRs</button>
+      </div>
+    </div>
+  </div>
+</div>

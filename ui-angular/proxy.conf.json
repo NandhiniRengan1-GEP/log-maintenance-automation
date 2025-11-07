@@ -1,0 +1,35 @@
+{
+  "/api": {
+    "target": "http://localhost:3000",
+    "secure": false,
+    "changeOrigin": true
+  },
+  "/newrelic": {
+    "target": "http://localhost:3002",
+    "secure": false,
+    "pathRewrite": {
+      "^/newrelic": "/api"
+    }
+  },
+  "/llm1": {
+    "target": "http://localhost:5001",
+    "secure": false,
+    "pathRewrite": {
+      "^/llm1": ""
+    }
+  },
+  "/llm2": {
+    "target": "http://localhost:5002",
+    "secure": false,
+    "pathRewrite": {
+      "^/llm2": ""
+    }
+  },
+  "/github": {
+    "target": "http://localhost:3005",
+    "secure": false,
+    "pathRewrite": {
+      "^/github": ""
+    }
+  }
+}

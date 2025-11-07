@@ -1,0 +1,35 @@
+{
+  "name": "mock-codebase-service",
+  "version": "1.0.0",
+  "description": "Sample microservice with intentional bugs for testing log-based maintenance",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest",
+    "trigger-errors": "node scripts/trigger-errors.js",
+    "lint": "eslint src/"
+  },
+  "keywords": [
+    "microservice",
+    "api",
+    "demo"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2",
+    "newrelic": "^11.0.0",
+    "pg": "^8.11.3",
+    "redis": "^4.6.7",
+    "dotenv": "^16.3.1",
+    "axios": "^1.5.0",
+    "uuid": "^9.0.0"
+  },
+  "devDependencies": {
+    "jest": "^29.6.4",
+    "nodemon": "^3.0.1",
+    "eslint": "^8.48.0",
+    "supertest": "^6.3.3"
+  }
+}

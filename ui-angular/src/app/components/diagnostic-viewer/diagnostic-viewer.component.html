@@ -1,0 +1,119 @@
+<div class="diagnostic-container container">
+  <div class="page-header">
+    <h1>Diagnostic Analysis</h1>
+    <p class="subtitle">Error diagnosis for transaction {{ transactionId }}</p>
+  </div>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="error" class="card">
+    <div class="alert alert-error">{{ error }}</div>
+  </div>
+
+  <div *ngIf="!loading && diagnostic" class="fade-in">
+    <!-- Error Category -->
+    <div class="card">
+      <div class="card-header">Error Classification</div>
+      <div class="grid grid-3">
+        <div class="info-item">
+          <div class="info-label">Category</div>
+          <div class="info-value">
+            <span class="badge badge-error">{{ diagnostic.error.category }}</span>
+          </div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Severity</div>
+          <div class="info-value">{{ diagnostic.error.severity || 'HIGH' }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Message</div>
+          <div class="info-value">{{ diagnostic.error.message }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Source Location -->
+    <div class="card">
+      <div class="card-header">Source Location</div>
+      <div class="source-info">
+        <div class="source-path">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-width="2"/>
+          </svg>
+          <span>{{ diagnostic.source.file }}:{{ diagnostic.source.line }}</span>
+        </div>
+        <div class="grid grid-2">
+          <div class="info-item">
+            <div class="info-label">Function</div>
+            <div class="info-value">{{ diagnostic.source.function || 'N/A' }}</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Line Number</div>
+            <div class="info-value">{{ diagnostic.source.line }}</div>
+          </div>
+        </div>
+        
+        <div class="code-block" *ngIf="diagnostic.source.codeSnippet">
+          <div class="code-header">Code Context</div>
+          <pre>{{ diagnostic.source.codeSnippet }}</pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Repository Info -->
+    <div class="card">
+      <div class="card-header">Repository Information</div>
+      <div class="grid grid-3">
+        <div class="info-item">
+          <div class="info-label">Repository</div>
+          <div class="info-value">{{ diagnostic.repository.repository }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Branch</div>
+          <div class="info-value">{{ diagnostic.repository.branch }}</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">Path</div>
+          <div class="info-value">{{ diagnostic.repository.path }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="card">
+      <div class="actions">
+        <button class="btn btn-primary" (click)="generateSolution()" [disabled]="loadingSolution">
+          <span *ngIf="!loadingSolution">Generate Solution</span>
+          <span *ngIf="loadingSolution">Generating...</span>
+        </button>
+        <button class="btn btn-secondary" routerLink="/errors">Back to Errors</button>
+      </div>
+    </div>
+
+    <!-- Solution Preview -->
+    <div class="card" *ngIf="solution">
+      <div class="card-header">Generated Solution</div>
+      <div class="solution-preview">
+        <div class="solution-type">
+          <span class="badge" [class.badge-success]="solution.solutionType === 'CODE_FIX'" 
+                [class.badge-warning]="solution.solutionType === 'ALERT'">
+            {{ solution.solutionType }}
+          </span>
+        </div>
+        
+        <div *ngIf="solution.solutionType === 'CODE_FIX'" class="fix-summary">
+          <p><strong>Fix Available:</strong> {{ solution.fix.explanation }}</p>
+          <p><strong>File:</strong> {{ solution.fix.file }}</p>
+          <button class="btn btn-success" (click)="viewFix()">View Complete Fix</button>
+        </div>
+
+        <div *ngIf="solution.solutionType === 'ALERT'" class="alert-summary">
+          <p><strong>Alert Type:</strong> {{ solution.alert.category }}</p>
+          <p>{{ solution.alert.message }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
