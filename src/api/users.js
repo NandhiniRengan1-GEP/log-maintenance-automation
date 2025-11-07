@@ -11,10 +11,6 @@ router.get('/:id', async (req, res, next) => {
     const user = await userService.getUserById(req.params.id);
     
     // BUG: user might be null/undefined, but we access user.id without checking
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-    
     console.log(`Fetching profile for user: ${user.id}`);
     
     // This will throw: TypeError: Cannot read property 'id' of undefined
